@@ -1,0 +1,29 @@
+//Kamarad.idl -> idlj -fallTIE -oldImplBase kamarad.idl
+
+module Kamarad	{
+
+	//Record structure for account stored as a struct
+	struct KamaradAccountDetails	{
+		
+		string name;
+		string phoneNumber;
+		string address;
+		double credit;
+		long uniqueId;
+	
+	};
+	
+	interface KamaradProvider	{
+		
+		//Register
+		void register(in KamaradAccountDetails accountDetails, out any uniqueId);
+		
+		//Return balance - retrieve the entire record
+		void getDetails(in long uniqueId, out KamaradAccountDetails accountDetails);
+		
+		//Topup
+		void topupAccount(in long uniqueId, in double amount);
+	
+	};
+	
+};

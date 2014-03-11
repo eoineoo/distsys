@@ -8,8 +8,8 @@ import java.util.Hashtable;
 public class KamaradServant	implements KamaradProviderOperations	{
 
 	private ORB orb;
-	private Hashtable<Long, KamaradAccountDetails> hashTable = new Hashtable<Long, KamaradAccountDetails>();	
-	private long uniqueId;
+	private Hashtable<Integer, KamaradAccountDetails> hashTable = new Hashtable<Integer, KamaradAccountDetails>();	
+	private int uniqueIdNew;
 	
 	//Constructor
 	public KamaradServant(ORB orb)	{
@@ -23,27 +23,37 @@ public class KamaradServant	implements KamaradProviderOperations	{
 		Any anyUniqueId = orb.create_any();
 		
 		//Create a new unique ID from 1000000 - 9999999
-		uniqueId = (int) (Math.random() * ((9999999 - 1000000) + 1) + 1000000);
+		//uniqueIdNew = (int) (Math.random() * ((9999999 - 1000000) + 1) + 1000000);
+		uniqueIdNew = 123456789;
 		
+		//Create a KamaradAccountDetails object, fill in the details and insert to the HashTable
+		accountDetails.name = "Eoin McCrann";
+        accountDetails.address = "123 Fake Street";
+        accountDetails.phoneNumber = "0871234567";
+        accountDetails.credit = 1000.75;
+        accountDetails.uniqueId = uniqueIdNew;
+
 		//Create a hash table and store this value in it
-		hashTable.put(uniqueId, null);
+		hashTable.put(uniqueIdNew, accountDetails);
 		
 		//This code was already here
-		anyUniqueId.insert_longlong(uniqueId);
+		anyUniqueId.insert_longlong(uniqueIdNew);
 		anyUniqueIdHolder.value = anyUniqueId;
 	}
 	
 	//Return balance - retrieve the entire record
 	public void getDetails (int uniqueId, Kamarad.KamaradAccountDetailsHolder accountDetailsHolder)	{
-		// TODO
-        // Look up and retrieve the account details for this user
+		
+		// Look up and retrieve the account details for this user
         KamaradAccountDetails accountDetails = new KamaradAccountDetails();
-        accountDetails.name = " <retrieved customer name> ";
-        accountDetails.address = " <retrieved customer address> ";
-        accountDetails.phoneNumber = " <retrieved mobile number> ";
-        accountDetails.credit = 0.0; // Retrieved credit balance
-        accountDetails.uniqueId = 1; // Retrieved unique identifier
-
+        hashTable.get(uniqueId);
+		
+		//Required?
+		String name = accountDetails.name;
+	    String address = accountDetails.address;
+        String phoneNumber = accountDetails.phoneNumber;
+        double credit = accountDetails.credit;
+			
         // Put the account into a holder object for returning
         accountDetailsHolder.value = accountDetails;
 	}
@@ -51,8 +61,15 @@ public class KamaradServant	implements KamaradProviderOperations	{
 	//Topup
 	public void topupAccount (int uniqueId, double amount)	{
 		// TODO
-        // Look up the account details for this user and update the credit by adding the
-        // specified top-up to the existing balancefac
+        // Look up the account details for this user and update the credit by adding the specified top-up to the existing balance
+		KamaradAccountDetails accountDetails = new KamaradAccountDetails();
+        hashTable.get(uniqueId);
+		
+		double oldCredit = accountDetails.credit;
+		double newCredit = oldCredit + amount;
+		
+		accountDetails.credit = newCredit;
+		
 	}
 	
 }
